@@ -1,0 +1,130 @@
+# SimpleRevertExample Contract
+
+## Overview
+
+The `SimpleRevertExample` contract is a simple Ethereum smart contract written in Solidity. It allows users to deposit Ether, transfer balance to other addresses, and withdraw their balance.
+The contract demonstrates the use of `require`, `assert`, and `revert` for error handling.
+
+## Features
+
+- **Deposit Ether**: Users can deposit Ether into the contract.
+- **Transfer Balance**: Users can transfer their balance to other addresses.
+- **Withdraw Balance**: Users can withdraw their balance from the contract.
+
+## Prerequisites
+
+To interact with this contract, you need:
+- An Ethereum wallet such as MetaMask.
+- Some Ether to test the contract functions.
+- [Remix IDE](https://remix.ethereum.org/) for deploying and interacting with the contract.
+
+## Contract Functions
+
+### deposit
+
+```
+function deposit() public payable
+```
+
+- **Description**: Allows users to deposit Ether into the contract.
+- **Payable**: Yes, this function accepts Ether.
+- **Usage**: 
+  - Enter the amount of Ether to deposit in the "Value" field in Remix.
+  - Call the `deposit` function.
+
+### transfer
+
+```
+function transfer(address _to, uint _amount) public
+```
+
+- **Description**: Allows users to transfer their balance to another address.
+- **Parameters**:
+  - `_to`: The recipient address.
+  - `_amount`: The amount to transfer.
+- **Usage**: 
+  - Specify the recipient address and the amount to transfer.
+  - Call the `transfer` function.
+
+### withdraw
+
+```
+function withdraw(uint _amount) public
+```
+
+- **Description**: Allows users to withdraw their balance from the contract.
+- **Parameters**:
+  - `_amount`: The amount to withdraw.
+- **Usage**: 
+  - Specify the amount to withdraw.
+  - Call the `withdraw` function.
+
+## Error Handling
+
+The contract uses different mechanisms for error handling:
+- **require**: Ensures conditions are met before executing further.
+- **assert**: Used for internal error checking.
+- **revert**: Reverts the transaction if conditions are not met.
+
+## Example
+
+### Deploying the Contract
+
+1. Open [Remix IDE](https://remix.ethereum.org/).
+2. Create a new file named `SimpleRevertExample.sol`.
+3. Copy and paste the contract code into the file.
+4. Compile the contract using the Solidity compiler.
+5. Deploy the contract using the "Deploy & Run Transactions" tab.
+
+### Interacting with the Contract
+
+1. **Deposit Ether**:
+   - Enter the amount of Ether to deposit in the "Value" field (e.g., `1` for 1 Ether).
+   - Click on the `deposit` function to deposit the Ether.
+2. **Transfer Balance**:
+   - Enter the recipient address and the amount to transfer in the `transfer` function fields.
+   - Click on the `transfer` button to transfer the specified amount.
+3. **Withdraw Balance**:
+   - Enter the amount to withdraw in the `withdraw` function field.
+   - Click on the `withdraw` button to withdraw the specified amount.
+
+## Contract Code
+
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SimpleRevertExample {
+    mapping(address => uint) public balance;
+
+    // Function to deposit Ether using revert
+    function deposit() public payable {
+        if (msg.value <= 0) {
+            revert("Deposit amount must be greater than zero");
+        }
+        balance[msg.sender] += msg.value;
+    }
+
+    // Function to transfer balance using require
+    function transfer(address _to, uint _amount) public {
+        require(balance[msg.sender] >= _amount, "Not enough funds to transfer.");
+        balance[_to] += _amount;
+        balance[msg.sender] -= _amount;
+    }
+
+    // Function to withdraw balance using assert
+    function withdraw(uint _amount) public {
+        assert(balance[msg.sender] >= _amount);
+        balance[msg.sender] -= _amount;
+        payable(msg.sender).transfer(_amount);
+    }
+}
+```
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+This README file should help users understand the purpose of the contract, how to deploy it, and how to interact with it using Remix IDE.
